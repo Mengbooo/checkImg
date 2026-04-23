@@ -13,13 +13,13 @@ export function useC2PA() {
     setResult(null)
 
     try {
-      const c2pa = await createC2pa()
-      const arrayBuffer = await file.arrayBuffer()
+      const c2pa = await createC2pa({
+        wasmSrc: '/c2pa_bg.wasm',
+      })
+      const reader = await c2pa.reader.fromBlob(file.type, file)
 
-      const result = await c2pa.read(arrayBuffer)
-
-      if (result.manifest) {
-        const parsed = parseC2PAResult(result.manifest)
+      if (reader.manifest) {
+        const parsed = parseC2PAResult(reader.manifest)
         setResult(parsed)
       } else {
         setResult({ status: 'no_metadata', details: null })
