@@ -18,8 +18,9 @@ export function useC2PA() {
       })
       const reader = await c2pa.reader.fromBlob(file.type, file)
 
-      if (reader.manifest) {
-        const parsed = parseC2PAResult(reader.manifest)
+      if (reader) {
+        const manifest = await reader.activeManifest()
+        const parsed = parseC2PAResult(manifest)
         setResult(parsed)
       } else {
         setResult({ status: 'no_metadata', details: null })

@@ -4,6 +4,55 @@
  */
 
 /**
+ * 检测是否为 AI 生成图片
+ * @param {Object} manifest - c2pa manifest 对象
+ * @returns {boolean}
+ */
+function isAIGenerated(manifest) {
+  if (!manifest) return false
+
+  // 检查 claim_generator_info 中是否包含已知 AI 工具
+  const generatorInfo = manifest.claim_generator_info || []
+  const aiPatterns = [
+    'midjourney',
+    'dalle',
+    'dall-e',
+    'stable diffusion',
+    'stability.ai',
+    'adobe firefly',
+    'firefly',
+    ' bing ',
+    'dall-e',
+    'gpt',
+    'claude',
+    'stable diffusion',
+    'imagen',
+    ' Parti '
+  ]
+
+  for (const info of generatorInfo) {
+    const name = (info.name || '').toLowerCase()
+    if (aiPatterns.some(pattern => name.includes(pattern))) {
+      return true
+    }
+  }
+
+  // 检查 vendor
+  const vendor = (manifest.vendor || '').toLowerCase()
+  if (aiPatterns.some(pattern => vendor.includes(pattern))) {
+    return true
+  }
+
+  // 检查 format 是否包含 AI 生成标记
+  const format = (manifest.format || '').toLowerCase()
+  if (format.includes('ai') || format.includes('generated')) {
+    return true
+  }
+
+  return false
+}
+
+/**
  * 解析 C2PA 结果并返回标准化判断
  * @param {Object} manifest - c2pa 库返回的 manifest
  * @returns {{ status: C2PAStatus, details: Object|null }}
@@ -14,26 +63,15 @@ export function parseC2PAResult(manifest) {
   }
 
   try {
-    const assertions = manifest.assertions || []
-    const hasAIGeneration = assertions.some(assertion => {
-      // 检查是否是 AI 生成相关的数据
-      const label = assertion.label || ''
-      return label.includes('ai') ||
-             label.includes('generated') ||
-             label.includes('stabilityai') ||
-             label.includes('midjourney') ||
-             label.includes('dalle')
-    })
+    const hasAIGeneration = isAIGenerated(manifest)
 
     return {
       status: hasAIGeneration ? 'ai_generated' : 'authentic',
       details: {
         vendor: manifest.vendor,
-        version: manifest.version,
-        assertions: assertions.map(a => ({
-          label: a.label,
-          data: a.data,
-        })),
+        format: manifest.format,
+        title: manifest.title,
+        claim_generator_info: manifest.claim_generator_info,
       },
     }
   } catch (error) {
