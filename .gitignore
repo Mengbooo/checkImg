@@ -3,3 +3,6 @@ pnpm-lock.yaml
 dist/
 .DS_Store
 *.local
+.agents/
+.superpowers/
+docs/
