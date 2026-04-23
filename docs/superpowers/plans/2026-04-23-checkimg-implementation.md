@@ -6,7 +6,7 @@
 
 **Architecture:** Vite + React 18 单页应用，c2pa npm 包在浏览器端解析图片，前端仅负责图片读取和结果展示，不涉及后端服务。
 
-**Tech Stack:** Vite, React 18, c2pa, Paper Design CSS
+**Tech Stack:** Vite, React 18, c2pa, Paper Design CSS, pnpm
 
 ---
 
@@ -95,7 +95,7 @@ export default defineConfig({
 
 - [ ] **Step 4: 安装依赖**
 
-Run: `npm install`
+Run: `pnpm install`
 
 ---
 
@@ -678,11 +678,11 @@ git commit -m "feat: add ResultDisplay component and integrate C2PA"
 
 - [ ] **Step 1: 构建项目**
 
-Run: `npm run build`
+Run: `pnpm run build`
 
 - [ ] **Step 2: 启动开发服务器测试**
 
-Run: `npm run dev`
+Run: `pnpm run dev`
 
 - [ ] **Step 3: 测试上传图片（准备一张有 C2PA 元数据的测试图）**
 
