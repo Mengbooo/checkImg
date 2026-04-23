@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { createC2pa } from 'c2pa'
 import { parseC2PAResult } from '../utils/c2paHelper'
+import workerSrc from 'c2pa/dist/c2pa.worker.js?url'
 
 export function useC2PA() {
   const [loading, setLoading] = useState(false)
@@ -13,7 +14,9 @@ export function useC2PA() {
     setResult(null)
 
     try {
-      const c2pa = await createC2pa()
+      const c2pa = await createC2pa({
+        workerSrc,
+      })
       const arrayBuffer = await file.arrayBuffer()
 
       const result = await c2pa.read(arrayBuffer)
