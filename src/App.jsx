@@ -1,16 +1,13 @@
 import Header from './components/Header'
 import ImageUploader from './components/ImageUploader'
 import ResultDisplay from './components/ResultDisplay'
-import { useState } from 'react'
+import { useC2PA } from './hooks/useC2PA'
 
 function App() {
-  const [result, setResult] = useState(null)
-  const [loading, setLoading] = useState(false)
+  const { loading, result, error, analyzeImage } = useC2PA()
 
   const handleImageSelect = async (file) => {
-    setLoading(true)
-    // TODO: 实现 C2PA 解析
-    setLoading(false)
+    await analyzeImage(file)
   }
 
   return (
@@ -18,7 +15,7 @@ function App() {
       <div className="container">
         <Header />
         <ImageUploader onImageSelect={handleImageSelect} />
-        <ResultDisplay result={result} loading={loading} />
+        <ResultDisplay result={result} loading={loading} error={error} />
       </div>
     </div>
   )
