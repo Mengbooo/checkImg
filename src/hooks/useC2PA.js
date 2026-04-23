@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { createC2pa } from 'c2pa'
+import { createC2pa } from '@contentauth/c2pa-web'
 import { parseC2PAResult } from '../utils/c2paHelper'
 
 export function useC2PA() {
@@ -13,9 +13,7 @@ export function useC2PA() {
     setResult(null)
 
     try {
-      const c2pa = await createC2pa({
-        workerSrc: '/c2pa.worker.js',
-      })
+      const c2pa = await createC2pa()
       const arrayBuffer = await file.arrayBuffer()
 
       const result = await c2pa.read(arrayBuffer)
